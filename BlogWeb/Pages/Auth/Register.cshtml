@@ -1,0 +1,60 @@
+﻿@page
+@model BlogWeb.Pages.Auth.RegisterModel
+@{
+    Layout = "Shared/_AuthLayout";
+    ViewData["Title"] = "ثبت نام";
+}
+
+<!-- Login page -->
+<div class="login_wrapper">
+    <div class="login_box">
+        <h3 style="margin: 10px auto; color: #FF574D">ثبت نام</h3>
+        <div class="login_form">
+            <div class="login_form_inner">
+                <!-- <h3>Login to <span>your account</span></h3> -->
+                <ul class="login_tab">
+                    <li><a asp-page="Login"> ورود</a></li>
+                    <li><a class="active"> عضویت</a></li>
+                </ul>
+
+                <form method="post">
+                    <div class="form-group">
+                        <input asp-for="Name" type="text" name="name" class="input-text" placeholder="نام">
+                        <span asp-validation-for="Name" style="color: red"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Family" type="text" name="family" class="input-text" placeholder="نام خانوادگی">
+                        <span asp-validation-for="Family" style="color: red"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="PhoneNumber" type="text" name="phonenumber" class="input-text" placeholder="شماره تلفن">
+                        <span asp-validation-for="PhoneNumber" style="color: red"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <input asp-for="Password" type="password" name="Password" class="input-text" placeholder="رمزعبور">
+                        <span asp-validation-for="Password" style="color: red"></span>
+
+                    </div>
+
+                    <div class="form-group">
+                        <input asp-for="NationalCode" type="text" name="nationalcode" class="input-text" placeholder="کدملی">
+                        <span asp-validation-for="NationalCode" style="color: red"></span>
+
+                    </div>
+
+                    <div class="checkbox clearfix">
+
+                        <a asp-page="ForgotPassword">فراموشی رمزعبور</a>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn-md btn-theme btn-block">ورود<i class="fa fa-arrow-left"></i></button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
