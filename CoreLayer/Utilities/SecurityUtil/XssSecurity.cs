@@ -1,7 +1,6 @@
-﻿
-using Ganss.Xss;
+﻿using Ganss.Xss;
 
-namespace Common.Application.SecurityUtil
+namespace CoreLayer.Utilities.SecurityUtil
 {
     public static class XssSecurity
     {

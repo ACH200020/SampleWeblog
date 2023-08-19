@@ -1,4 +1,4 @@
-﻿using Common.Application.SecurityUtil;
+﻿using CoreLayer.Utilities.SecurityUtil;
 using Microsoft.AspNetCore.Http;
 
 namespace CoreLayer.Services.FileManagment

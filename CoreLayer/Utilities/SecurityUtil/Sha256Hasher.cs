@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Common.Application.SecurityUtil;
+namespace CoreLayer.Utilities.SecurityUtil;
 
 public class Sha256Hasher
 {

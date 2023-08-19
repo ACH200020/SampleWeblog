@@ -1,5 +1,7 @@
 ﻿using CoreLayer.DTOs.User;
+using CoreLayer.DTOs.UserRole;
 using CoreLayer.Services.User;
+using CoreLayer.Services.UserRole;
 using CoreLayer.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,11 +15,15 @@ namespace BlogWeb.Pages.Auth
     {
         #region Services
         private readonly IUserService _userService;
-
-        public RegisterModel(IUserService userService)
+        private readonly IUserRoleService _userRoleService;
+        public RegisterModel(IUserService userService, IUserRoleService userRoleService)
         {
             _userService = userService;
+            _userRoleService = userRoleService;
+
         }
+
+       
 
         #endregion
 
@@ -53,14 +59,25 @@ namespace BlogWeb.Pages.Auth
 
         public IActionResult OnPost()
         {
-            var result = _userService.AddUser(new AddUserDto()
+
+            int userRoleId = _userRoleService.CreateUserRole(new CreateUserRoleDto()
+            {
+                Admin = false,
+                Comment = true,
+                Downloader = true,
+                User = true,
+                Writer = false
+            });
+
+            var result = _userService.RegisterUser(new RegisterUserDto()
             {
                 CreationDate = DateTime.Now,
                 Name = Name,
                 Family = Family,
                 NationalCode = NationalCode,
                 PhoneNumber = PhoneNumber,
-                Password = Password
+                Password = Password,
+                UserRoleId = userRoleId
             });
 
             if(result.Status != OperationResultStatus.Success)

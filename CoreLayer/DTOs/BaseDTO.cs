@@ -1,4 +1,4 @@
-﻿namespace DataLayer.Entities
+﻿namespace CoreLayer.DTOs
 {
     public class BaseDTO
     {

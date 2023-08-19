@@ -3,16 +3,17 @@ using CoreLayer.Mapper;
 using CoreLayer.Services.FileManagment;
 using CoreLayer.Utilities;
 using DataLayer.Context;
-using Common.Application.SecurityUtil;
+using Microsoft.EntityFrameworkCore;
+using CoreLayer.Utilities.SecurityUtil;
 
 namespace CoreLayer.Services.User
 {
     public interface IUserService
     {
-        OperationResult AddUser(AddUserDto command);
+        OperationResult RegisterUser(RegisterUserDto command);
         OperationResult EditUser(EditUserDto command);
 
-        OperationResult Login(LoginDto command);
+        UserDto? Login(LoginDto command);
 
         List<UserDto> GetUsers();
     }
@@ -27,7 +28,7 @@ namespace CoreLayer.Services.User
             _fileManager = fileManager;
         }
 
-        public OperationResult AddUser(AddUserDto command)
+        public OperationResult RegisterUser(RegisterUserDto command)
         {
             bool exists = _context.Users.Any(u=>u.PhoneNumber == command.PhoneNumber);
             if (exists)
@@ -70,17 +71,20 @@ namespace CoreLayer.Services.User
 
         public List<UserDto> GetUsers()
         {
-            return _context.Users.Select(user=>UserMapper.MapToDto(user)).ToList();
+            return _context.Users
+                .Include(u=>u.UserRole)
+                .Select(user=>UserMapper.MapToDto(user))
+                .ToList();
         }
 
-        public OperationResult Login(LoginDto command)
+        public UserDto? Login(LoginDto command)
         {
             var login = _context.Users.FirstOrDefault(u=>u.PhoneNumber == command.PhoneNumber && u.Password == Sha256Hasher.Hash(command.Password));
 
             if (login == null)
-                return OperationResult.NotFound();
+                return null;
 
-            return OperationResult.Success();
+            return UserMapper.MapToDto(login);
 
         }
     }

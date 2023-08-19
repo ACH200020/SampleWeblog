@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Drawing;
 
-namespace Common.Application.SecurityUtil
+namespace CoreLayer.Utilities.SecurityUtil
 {
-   public static class  ImageValidator
+    public static class ImageValidator
     {
         public static bool IsImage(this IFormFile? file)
         {

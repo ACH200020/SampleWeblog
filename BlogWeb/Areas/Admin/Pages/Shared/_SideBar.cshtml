@@ -1,0 +1,89 @@
+﻿@{
+    var selected = ViewData["selected"]?.ToString()?.ToLower();
+}
+<aside class="main-sidebar">
+    <section class="sidebar">
+        <ul class="sidebar-menu" data-widget="tree">
+          
+            <li class="@(selected=="index"?"active":null)">
+                <a asp-page="../Index">
+                    <i class="fa fa fa-dashboard"></i> <span>داشبرد</span>
+                </a>
+            </li>
+            
+            
+            <li class="treeview menu-close @(selected=="index"?"active":null)">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>درباره ما</span>
+                    <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                    </span>
+                </a>
+
+                <ul class="treeview-menu" style="">
+                    <li class="treeview menu-close">
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> <span>سهیل حسینی</span>
+                            <span class="pull-left-container">
+                                <i class="fa fa-angle-right pull-left"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu" style="">
+                            <li><a asp-page="/AboutUs/Sohyl/SelfInfo/Index"><i class="fa fa-circle-o"></i> اطلاعات شخصی</a></li>
+                            <li><a asp-page="/AboutUs/Sohyl/Skills/Index"><i class="fa fa-circle-o"></i>مهارت ها</a></li>
+                            <li><a asp-page="/AboutUs/Sohyl/CV/Index"><i class="fa fa-circle-o"></i> تجارب و تحصیلات</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="treeview menu-close">
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> <span>امین نیری</span>
+                            <span class="pull-left-container">
+                                <i class="fa fa-angle-right pull-left"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu" style="">
+                            <li><a asp-page="/AboutUs/Amin/SelfInfo/Index"><i class="fa fa-circle-o"></i> اطلاعات شخصی</a></li>
+                            <li><a asp-page="/AboutUs/Amin/Skills/Index"><i class="fa fa-circle-o"></i>مهارت ها</a></li>
+                            <li><a asp-page="/AboutUs/Amin/CV/Index"><i class="fa fa-circle-o"></i> تجارب و تحصیلات</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            
+            <li class="treeview menu-close @(selected=="index"?"active":null)">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>تماس با ما</span>
+                    <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="">
+                    <li><a asp-page="/Call/SohylIndex"><i class="fa fa-circle-o"></i> سهیل حسینی</a></li>
+                    <li><a asp-page="/Call/AminIndex"><i class="fa fa-circle-o"></i> امین نیری</a></li>
+                </ul>
+            </li>
+            
+            
+            <li class="@(selected=="users"?"active":null)">
+                <a asp-page="/Home/Index">
+                    <i class="fa fa fa-dashboard"></i> <span>صفحه اصلی</span>
+                </a>
+            </li>
+            
+
+            <li class="treeview menu-close">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>وبلاگ و نمونه کار</span>
+                    <span class="pull-left-container">
+                        <i class="fa fa-angle-right pull-left"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu" style="">
+                    <li><a asp-page="/Post/Index"><i class="fa fa-circle-o"></i> مدیریت وبلاگ</a></li>
+                    <li><a asp-page="/Post/SubImage/Index"><i class="fa fa-circle-o"></i>مدیریت عکس های پست</a></li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</aside>

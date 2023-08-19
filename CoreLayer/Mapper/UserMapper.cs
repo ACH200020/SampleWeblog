@@ -1,5 +1,6 @@
-﻿using Common.Application.SecurityUtil;
-using CoreLayer.DTOs.User;
+﻿using CoreLayer.DTOs.User;
+using CoreLayer.Services.UserRole;
+using CoreLayer.Utilities.SecurityUtil;
 using DataLayer.Entities.Users;
 using System;
 using System.Collections.Generic;
@@ -11,32 +12,32 @@ namespace CoreLayer.Mapper
 {
     internal class UserMapper
     {
+        
         internal static UserDto MapToDto(User user)
         {
             return new UserDto()
             {
                 CreationDate = user.CreationDate,
-                Family = user.Family,
                 Id = user.Id,
                 ImageAvatarName = user.ImageAvatarName,
-                Name = user.Name,
+                FullName = user.FullName,
                 NationalCode = user.NationalCode,
                 PhoneNumber = user.PhoneNumber,
-                UserRole = (DTOs.User.UserRole)user.UserRole,
+                UserRoleId = user.UserRoleId,
+                UserRole = UserRoleMapper.MapToDto(user.UserRole)
             };
         }
 
-        internal static User AddUserMap(AddUserDto dto)
+        internal static User AddUserMap(RegisterUserDto dto)
         {
             return new User()
             {
                 CreationDate = dto.CreationDate,
-                Family = dto.Family,
                 ImageAvatarName = "R.png",
-                Name = dto.Name,
+                FullName = dto.Name + " " + dto.Family,
                 NationalCode = dto.NationalCode,
                 PhoneNumber = dto.PhoneNumber,
-                UserRole = DataLayer.Entities.Users.UserRole.User,
+                UserRoleId = dto.UserRoleId,
                 Password = Sha256Hasher.Hash(dto.Password),
             };
         }
@@ -45,8 +46,7 @@ namespace CoreLayer.Mapper
         {
             user.Id = dto.Id;
             user.CreationDate = DateTime.Now;
-            user.Family = dto.Family;
-            user.Name = dto.Name;
+            
             return user;
         }
     }
