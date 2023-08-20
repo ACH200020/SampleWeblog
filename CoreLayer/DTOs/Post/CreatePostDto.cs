@@ -10,5 +10,6 @@ namespace CoreLayer.DTOs.Post
         public string Slug { get; set; }
         public int UserId { get; set; }
         public DateTime CreationDate { get; set; }
+        public string ImageAlt { get; set; }
     }
 }

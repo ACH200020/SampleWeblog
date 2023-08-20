@@ -1,0 +1,44 @@
+﻿@page "{id?}"
+@model BlogWeb.Areas.Admin.Pages.Users.EditRoleModel
+@{
+    ViewData["title"] = "ویرایش کاربر";
+}
+<section class="content-header">
+    <h1>
+        @ViewData["title"]
+    </h1>
+    <ol class="breadcrumb">
+        <li><a asp-page="../Index"><i class="fa fa-dashboard"></i> خانه</a></li>
+        <li><a asp-page="Index">مقالات</a></li>
+        <li class="active">@ViewData["title"]</li>
+    </ol>
+</section>
+<section class="content">
+    <form class="box box-danger" method="post" enctype="multipart/form-data">
+        <div class="box-body row">
+            <div class="col-md-6">
+                @Html.EditorFor(m => m.Admin)
+            </div>
+            <div class="col-md-6">
+                @Html.EditorFor(m => m.Writer)
+            </div>
+            <div class="col-md-12">
+                @Html.EditorFor(m => m.User)
+            </div>
+
+            <div class="col-md-6">
+                @Html.EditorFor(m => m.Comment)
+            </div>
+            <div class="col-md-6">
+                @Html.EditorFor(m => m.Downloader)
+            </div>
+            <div class="col-md-6">
+                @Html.EditorFor(m => m.IsActive)
+            </div>
+
+        </div>
+        <div class="box-footer">
+            <button class="btn btn-success" type="submit">ثبت اطلاعات</button>
+        </div>
+    </form>
+</section>

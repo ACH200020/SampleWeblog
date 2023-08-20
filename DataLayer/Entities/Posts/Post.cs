@@ -16,6 +16,7 @@ namespace DataLayer.Entities.Posts
         public string ImagePost { get; set; }
         public string Slug { get; set; }
 
+        public string ImageAlt { get; set; }
         #region Relation
         [ForeignKey("UserId")]
         public User User { get; set; }

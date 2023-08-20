@@ -1,7 +1,11 @@
-﻿using CoreLayer.DTOs.User;
+﻿using BlogWeb.Infrastuctures.JwtBuilder;
+using CoreLayer.DTOs.User;
+using CoreLayer.DTOs.UserToken;
 using CoreLayer.Services.User;
 using CoreLayer.Services.UserRole;
+using CoreLayer.Services.UserToken;
 using CoreLayer.Utilities;
+using CoreLayer.Utilities.SecurityUtil;
 using DataLayer.Entities.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,12 +24,14 @@ namespace BlogWeb.Pages.Auth
         #region Services
         private readonly IUserService _userService;
         private readonly IUserRoleService _userRoleService;
+        private readonly IUserTokenService _userToken;
         private readonly IConfiguration _configuration;
-        public LoginModel(IUserService userService, IUserRoleService userRoleService, IConfiguration configuration)
+        public LoginModel(IUserService userService, IUserRoleService userRoleService, IConfiguration configuration, IUserTokenService userToken)
         {
             _userService = userService;
             _userRoleService = userRoleService;
             _configuration = configuration;
+            _userToken = userToken;
         }
         #endregion
 
@@ -78,34 +84,42 @@ namespace BlogWeb.Pages.Auth
                 }
             }
 
-            var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.MobilePhone,user.PhoneNumber),
-                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+            string jwtToken = BuildJwtToken.BuildToken(roles, user, _configuration,null);
+            
+            var guid = Guid.NewGuid().ToString();
 
-            };
+            string refreshJwtToken = BuildJwtToken.BuildToken(roles, user, _configuration, guid);
 
-            for (int i = 0; i < roles.Count; i++)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, roles[i]));
-            }
-
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:SignInKey"]));
-            var credential = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JwtConfig:Issuer"],
-                audience: _configuration["JwtConfig:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddDays(7),
-                signingCredentials: credential);
-
-            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
             HttpContext.Response.Cookies.Append("token", jwtToken, new CookieOptions()
             {
                 HttpOnly = true,
                 Expires = DateTimeOffset.Now.AddDays(7)
             });
+
+            HttpContext.Response.Cookies.Append("refreshToken", refreshJwtToken, new CookieOptions()
+            {
+                HttpOnly = true,
+                Expires = DateTimeOffset.Now.AddDays(10)
+            });
+
+            var result = _userToken.CreateToken(new CreateUserTokenDto()
+            {
+                CreationDate = DateTime.Now,
+                RefreshTokenExpireDate = DateTime.Now.AddDays(10),
+                TokenExpireDate = DateTime.Now.AddDays(7),
+                HashJwtToken = Sha256Hasher.Hash(jwtToken),
+                HashRefreshToken = Sha256Hasher.Hash(refreshJwtToken),
+                UserId = user.Id,
+                Device = DeviceInfornation.Info()
+            });
+            //will add sweet Alert info
+            if(result.Status != OperationResultStatus.Success)
+            {
+                ModelState.AddModelError(nameof(PhoneNumber), result.Message);
+                return Redirect("../Index");
+
+            }
+
             return Redirect("../Index");
         }
     }

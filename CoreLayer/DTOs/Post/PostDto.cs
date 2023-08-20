@@ -17,5 +17,7 @@ namespace CoreLayer.DTOs.Post
         public string ImagePost { get; set; }
         public string Slug { get; set; }
         public UserDto User { get; set; }
+        public string ImageAlt { get; set; }
+
     }
 }

@@ -16,6 +16,7 @@ namespace CoreLayer.Services.User
         UserDto? Login(LoginDto command);
 
         List<UserDto> GetUsers();
+        UserDto GetUserById(int id);
     }
 
     public class UserService : IUserService
@@ -84,8 +85,20 @@ namespace CoreLayer.Services.User
             if (login == null)
                 return null;
 
+            if (login.IsActive == false)
+                return null;
+
             return UserMapper.MapToDto(login);
 
+        }
+
+        public UserDto GetUserById(int id)
+        {
+            var user = _context.Users.FirstOrDefault(u=>u.Id == id);
+            if(user == null)
+                return new UserDto();
+
+            return UserMapper.MapToDto(user);
         }
     }
 }

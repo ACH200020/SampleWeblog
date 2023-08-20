@@ -9,5 +9,7 @@ namespace CoreLayer.DTOs.User
         public string Family { get; set; }
         public IFormFile Avatar { get; set; }
         public string Password { get; set; }
+        public bool IsActive { get; set; }
+
     }
 }

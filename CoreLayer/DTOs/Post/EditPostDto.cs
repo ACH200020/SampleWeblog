@@ -10,5 +10,7 @@ namespace CoreLayer.DTOs.Post
         public IFormFile ImagePost { get; set; }
         public string Slug { get; set; }
         public DateTime CreationDate { get; set; }
+        public string ImageAlt { get; set; }
+
     }
 }

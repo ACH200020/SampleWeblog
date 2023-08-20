@@ -3,6 +3,7 @@ using CoreLayer.Services.FileManagment;
 using CoreLayer.Services.Post;
 using CoreLayer.Services.User;
 using CoreLayer.Services.UserRole;
+using CoreLayer.Services.UserToken;
 using DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IPostService, PostService>();
 builder.Services.AddTransient<IFileManager, FileManager>();
 builder.Services.AddTransient<IUserRoleService, UserRoleService>();
+builder.Services.AddTransient<IUserTokenService, UserTokenService>();
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 var app = builder.Build();

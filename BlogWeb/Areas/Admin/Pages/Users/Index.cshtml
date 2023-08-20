@@ -1,0 +1,54 @@
+﻿@page
+@model BlogWeb.Areas.Admin.Pages.Users.IndexModel
+@{
+    ViewData["Title"] = "مدیریت کاربران";
+    var counter = 1;
+}
+<section class="content-header">
+    <h1>
+        @ViewData["Title"]
+    </h1>
+
+</section>
+<section class="content">
+
+    <a class="btn btn-success" style="margin-bottom: 5px" asp-page="Add">افزودن مقاله</a>
+    <div class="box box-primary ">
+        <div class="box-body p-0">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+
+                        <th>نام و نام خانواگی</th>
+                        <th>شماره موبایل</th>
+                        <th>نقش ادمین</th>
+                        <th>نقش نویسنده</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Users)
+                    {
+                        <tr>
+                            <td>@counter</td>
+                            
+                            <td>@item.FullName</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>@item.UserRole.Admin</td>
+                            <td>@item.UserRole.Writer</td>
+
+                            <td>
+                                <a asp-page="EditRole" asp-route-id="@item.Id" class="btn btn-info btn-sm">ویرایش نقش کاربر</a>
+                            </td>
+                           
+                        </tr>
+
+                        counter += 1;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>

@@ -16,6 +16,8 @@ namespace CoreLayer.Services.Post
     {
         OperationResult CreatePost(CreatePostDto command);
         OperationResult EditPost(EditPostDto command);
+        OperationResult DeletePost(int id); 
+        
         bool IsSlugExist(string slug);
         List<PostDto> GetAllPosts();
         PostDto GetPostById(int id);
@@ -44,6 +46,17 @@ namespace CoreLayer.Services.Post
             post.ImagePost = _fileManager.SaveImageAndReturnImageName(command.ImagePost, Directories.PostImage);
 
             _context.Posts.Add(post);
+            _context.SaveChanges();
+            return OperationResult.Success();
+        }
+
+        public OperationResult DeletePost(int id)
+        {
+            var post = _context.Posts.FirstOrDefault(p => p.Id == id);
+            if(post == null)
+                return OperationResult.NotFound();
+
+            _context.Posts.Remove(post);
             _context.SaveChanges();
             return OperationResult.Success();
         }

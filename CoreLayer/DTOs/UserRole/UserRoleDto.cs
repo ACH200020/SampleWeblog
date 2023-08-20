@@ -1,4 +1,6 @@
-﻿namespace CoreLayer.DTOs.UserRole
+﻿using CoreLayer.DTOs.User;
+
+namespace CoreLayer.DTOs.UserRole
 {
     public class UserRoleDto
     {

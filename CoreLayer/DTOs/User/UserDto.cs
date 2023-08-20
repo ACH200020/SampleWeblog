@@ -16,5 +16,7 @@ namespace CoreLayer.DTOs.User
         public string NationalCode { get; set; }
         public string PhoneNumber { get; set; }
         public string ImageAvatarName { get; set; }
+        public bool IsActive { get; set; }
+
     }
 }

@@ -24,7 +24,8 @@ namespace CoreLayer.Mapper
                 NationalCode = user.NationalCode,
                 PhoneNumber = user.PhoneNumber,
                 UserRoleId = user.UserRoleId,
-                UserRole = UserRoleMapper.MapToDto(user.UserRole)
+                UserRole = UserRoleMapper.MapToDto(user.UserRole),
+                IsActive = user.IsActive
             };
         }
 
@@ -38,6 +39,7 @@ namespace CoreLayer.Mapper
                 NationalCode = dto.NationalCode,
                 PhoneNumber = dto.PhoneNumber,
                 UserRoleId = dto.UserRoleId,
+                IsActive = true,
                 Password = Sha256Hasher.Hash(dto.Password),
             };
         }
@@ -46,6 +48,7 @@ namespace CoreLayer.Mapper
         {
             user.Id = dto.Id;
             user.CreationDate = DateTime.Now;
+            user.IsActive = dto.IsActive;
             
             return user;
         }

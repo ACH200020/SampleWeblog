@@ -26,6 +26,7 @@ namespace CoreLayer.Mapper
                 Title = post.Title,
                 User = post.User == null ? null : UserMapper.MapToDto(post.User),
                 UserId = post.UserId,
+                ImageAlt = post.ImageAlt,
 
             };
         }
@@ -36,11 +37,11 @@ namespace CoreLayer.Mapper
             return new Post()
             {
                 UserId = dto.UserId,
-                CreationDate = DateTime.Now,
+                CreationDate = dto.CreationDate,
                 Description = dto.Description,
                 Slug = dto.Slug.ToSlug(),
                 Title = dto.Title,
-
+                ImageAlt= dto.ImageAlt,
             };
         }
 
@@ -51,7 +52,7 @@ namespace CoreLayer.Mapper
             post.Description = dto.Description;
             post.Slug = dto.Slug.ToSlug();
             post.Title = dto.Title;
-            
+            post.ImageAlt = dto.ImageAlt;
             return post;
         }
     }
