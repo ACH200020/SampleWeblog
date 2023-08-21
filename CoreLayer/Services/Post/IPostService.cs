@@ -21,6 +21,7 @@ namespace CoreLayer.Services.Post
         bool IsSlugExist(string slug);
         List<PostDto> GetAllPosts();
         PostDto GetPostById(int id);
+        PostDto GetPostBySlug(string slug);
     }
 
     public class PostService : IPostService
@@ -106,6 +107,13 @@ namespace CoreLayer.Services.Post
             if(post==null)
                 return new PostDto();
             return PostMapper.MapToDto(post );
+        }
+
+        public PostDto GetPostBySlug(string slug)
+        {
+            var post = _context.Posts.FirstOrDefault(p=>p.Slug == slug);
+            if(post==null) return new PostDto();
+            return PostMapper.MapToDto(post);
         }
 
         public bool IsSlugExist(string slug)

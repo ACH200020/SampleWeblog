@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BlogWeb.Areas.Admin.Pages
 {
-    [Authorize]
-    public class IndexModel : PageModel
+
+    public class IndexModel : BaseController
     {
         public void OnGet()
         {

@@ -1,4 +1,5 @@
-﻿using CoreLayer.DTOs.Post;
+﻿using BlogWeb.Utilities.PDFCreater;
+using CoreLayer.DTOs.Post;
 using CoreLayer.Services.Post;
 using CoreLayer.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -10,14 +11,16 @@ namespace BlogWeb.Areas.Admin.Pages.Post
 {
     [ValidateAntiForgeryToken]
     [BindProperties]
-    public class AddModel : PageModel
+    public class AddModel : BaseController
     {
 
         #region Services
         private readonly IPostService _postService;
-        public AddModel(IPostService postService)
+        private readonly IReportService _report;
+        public AddModel(IPostService postService, IReportService report = null)
         {
             _postService = postService;
+            _report = report;
         }
 
         #endregion
@@ -25,6 +28,7 @@ namespace BlogWeb.Areas.Admin.Pages.Post
         #region Models
         [Display(Name = "متن")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
+        [UIHint("Ckeditor4")]
         public string Description { get; set; }
 
         [Display(Name = "Slug")]
@@ -71,11 +75,21 @@ namespace BlogWeb.Areas.Admin.Pages.Post
 
             });
 
-            if(result.Status != OperationResultStatus.Success)
+            result = _report.GeneratePdfReport(new PDFObject()
+            {
+                CreationDate = DateTime.Now,
+                Description = Description,
+                ImageAlt = ImageAlt,
+                Slug = Slug,
+                Title = Title,
+            });
+
+            if (result.Status != OperationResultStatus.Success)
             {
                 ModelState.AddModelError(nameof(Slug), result.Message);
                 return Page();
             }
+            
 
             return Redirect("Index");
 

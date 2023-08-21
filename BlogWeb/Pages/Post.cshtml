@@ -1,0 +1,14 @@
+﻿@page
+@using CoreLayer.Utilities;
+@model BlogWeb.Pages.PostModel
+@{
+}
+
+<div class="container" style="margin:auto">
+    <img style="width:500px; height:300px" src="@Directories.GetPostImage(Model.Post.ImagePost)" alt="@Model.Post.ImageAlt" />
+    <h1 class="mt-5">@Model.Post.Title</h1>
+    <p class="lead">@Html.Raw(Model.Post.Description)
+    </p>
+</div>
+<br/>
+<a asp-page="Download" asp-route-slug="@Model.Post.Slug">دانلود پیوست</a>

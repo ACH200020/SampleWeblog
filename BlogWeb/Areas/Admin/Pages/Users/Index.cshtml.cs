@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BlogWeb.Areas.Admin.Pages.Users
 {
-    public class IndexModel : PageModel
+    public class IndexModel : BaseController
     {
         #region Services
 

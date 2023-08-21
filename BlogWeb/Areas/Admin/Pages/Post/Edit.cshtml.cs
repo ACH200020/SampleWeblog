@@ -9,7 +9,7 @@ namespace BlogWeb.Areas.Admin.Pages.Post
 {
     [ValidateAntiForgeryToken]
     [BindProperties]
-    public class EditModel : PageModel
+    public class EditModel : BaseController
     {
         #region Services
         private readonly IPostService _postService;
@@ -23,6 +23,7 @@ namespace BlogWeb.Areas.Admin.Pages.Post
         #region Models
         [Display(Name = "متن")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
+        [UIHint("Ckeditor4")]
         public string Description { get; set; }
 
         [Display(Name = "Slug")]

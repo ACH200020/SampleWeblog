@@ -11,7 +11,7 @@ namespace BlogWeb.Areas.Admin.Pages.Users
 {
     [ValidateAntiForgeryToken]
     [BindProperties]
-    public class EditRoleModel : PageModel
+    public class EditRoleModel : BaseController
     {
         #region Services
         private readonly IUserService _userService;

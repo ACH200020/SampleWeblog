@@ -1,10 +1,17 @@
 ﻿@page
+@using CoreLayer.Utilities;
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@foreach (var item in Model.Posts)
+{
+    <div class="card row" style="width: 18rem; padding : 0px; margin:8px; flex-direction:row">
+        <img style=" padding:0; width:286px; height:180px" class="card-img-top" src="@Directories.GetPostImage(item.ImagePost)" alt="@item.ImageAlt">
+        <div class="card-body">
+            <h5 class="card-title">@item.Title</h5>
+            <p class="card-text">@item.CreationDate</p>
+            <a asp-page="Post" asp-route-slug="@item.Slug" class="btn btn-primary">اطلاعات بیشتر</a>
+        </div>
+    </div>
+}

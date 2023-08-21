@@ -1,5 +1,7 @@
-﻿using CoreLayer.Utilities.SecurityUtil;
+﻿using CoreLayer.Utilities;
+using CoreLayer.Utilities.SecurityUtil;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace CoreLayer.Services.FileManagment
 {
@@ -18,9 +20,9 @@ namespace CoreLayer.Services.FileManagment
         {
             if (file == null)
                 throw new Exception("File Is Null");
-
-            var fileName = $"{Guid.NewGuid()}{file.FileName}";
             
+            var fileName = $"{Guid.NewGuid()}{file.FileName}";
+
             var folderPath = Path.Combine(Directory.GetCurrentDirectory(), savePath.Replace("/", "\\"));
             if (!Directory.Exists(folderPath))
             {
@@ -39,5 +41,6 @@ namespace CoreLayer.Services.FileManagment
             if (File.Exists(filePath))
                 File.Delete(filePath);
         }
+ 
     }
 }

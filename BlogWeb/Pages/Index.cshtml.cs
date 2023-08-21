@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CoreLayer.DTOs.Post;
+using CoreLayer.Services.Post;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -7,16 +9,18 @@ namespace BlogWeb.Pages
     
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly IPostService _postService;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(IPostService postService)
         {
-            _logger = logger;
+            _postService = postService;
         }
 
-        public void OnGet()
+        public List<PostDto> Posts{ get; set; }
+        public IActionResult OnGet()
         {
-
+            Posts = _postService.GetAllPosts();
+            return Page();
         }
     }
 }
