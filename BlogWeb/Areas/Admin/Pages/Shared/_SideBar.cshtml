@@ -1,28 +1,36 @@
-﻿@{
+﻿@using BlogWeb.Utilities;
+@{
     var selected = ViewData["selected"]?.ToString()?.ToLower();
+    var roleUser = User.GetRole();
 }
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu" data-widget="tree">
-          
+
             <li class="@(selected=="index"?"active":null)">
                 <a asp-page="../Index">
                     <i class="fa fa fa-dashboard"></i> <span>داشبرد</span>
                 </a>
             </li>
-            
+
             <li class="@(selected=="users"?"active":null)">
                 <a asp-page="/Post/Index">
                     <i class="fa fa fa-dashboard"></i> <span>مدیریت پست</span>
                 </a>
             </li>
+            @foreach (var item in roleUser)
+            {
+                @if (item == "Admin")
+                {
+                    <li class="@(selected=="users"?"active":null)">
+                        <a asp-page="/Users/Index">
+                            <i class="fa fa fa-dashboard"></i> <span>مدیریت کاربران</span>
+                        </a>
+                    </li>
+                }
+            }
 
-            <li class="@(selected=="users"?"active":null)">
-                <a asp-page="/Users/Index">
-                    <i class="fa fa fa-dashboard"></i> <span>مدیریت کاربران</span>
-                </a>
-            </li>
-            
+
         </ul>
     </section>
 </aside>

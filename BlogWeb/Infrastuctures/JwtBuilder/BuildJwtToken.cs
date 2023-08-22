@@ -25,6 +25,7 @@ namespace BlogWeb.Infrastuctures.JwtBuilder
             {
                 new Claim(ClaimTypes.MobilePhone,user.PhoneNumber),
                 new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.FullName)
 
             };
 

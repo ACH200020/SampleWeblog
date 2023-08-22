@@ -11,7 +11,7 @@ namespace CoreLayer.Utilities
         public const string PostImage = "wwwroot/images/post";
         public const string AvatarImage = "wwwroot/images/avatar";
         public const string PostContentImage = "wwwroot/images/posts/content";
-
+        
         public static string GetPostImage(string imageName)
             => $"{PostImage.Replace("wwwroot", "")}/{imageName}";
 

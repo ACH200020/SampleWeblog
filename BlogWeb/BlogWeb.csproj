@@ -41,4 +41,9 @@
     <ProjectReference Include="..\CoreLayer\CoreLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\posts\content\" />
+    <Folder Include="wwwroot\images\post\" />
+  </ItemGroup>
+
 </Project>

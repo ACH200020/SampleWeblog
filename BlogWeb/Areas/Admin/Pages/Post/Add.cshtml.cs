@@ -1,4 +1,5 @@
-﻿using BlogWeb.Utilities.PDFCreater;
+﻿using BlogWeb.Utilities;
+using BlogWeb.Utilities.PDFCreater;
 using CoreLayer.DTOs.Post;
 using CoreLayer.Services.Post;
 using CoreLayer.Utilities;
@@ -60,9 +61,8 @@ namespace BlogWeb.Areas.Admin.Pages.Post
                 return Page();
             }
 
-            var userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-                
-
+            var userId = User.GetUserId();
+            var writer = User.GetUserFullName();
             var result = _postService.CreatePost(new CreatePostDto()
             {
                 CreationDate = DateTime.Now,
@@ -82,6 +82,7 @@ namespace BlogWeb.Areas.Admin.Pages.Post
                 ImageAlt = ImageAlt,
                 Slug = Slug,
                 Title = Title,
+                Writer = writer
             });
 
             if (result.Status != OperationResultStatus.Success)

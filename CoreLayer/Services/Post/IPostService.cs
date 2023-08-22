@@ -59,6 +59,9 @@ namespace CoreLayer.Services.Post
 
             _context.Posts.Remove(post);
             _context.SaveChanges();
+
+            _fileManager.DeleteFile(post.ImagePost, Directories.PostImage);
+
             return OperationResult.Success();
         }
 

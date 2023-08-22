@@ -1,4 +1,6 @@
-﻿using CoreLayer.DTOs.Post;
+﻿using BlogWeb.Utilities;
+using BlogWeb.Utilities.PDFCreater;
+using CoreLayer.DTOs.Post;
 using CoreLayer.Services.Post;
 using CoreLayer.Utilities;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +15,11 @@ namespace BlogWeb.Areas.Admin.Pages.Post
     {
         #region Services
         private readonly IPostService _postService;
-
-        public EditModel(IPostService postService)
+        private readonly IReportService _reportService;
+        public EditModel(IPostService postService, IReportService reportService)
         {
             _postService = postService;
+            _reportService = reportService;
         }
         #endregion
 
@@ -42,7 +45,7 @@ namespace BlogWeb.Areas.Admin.Pages.Post
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
         public string ImageAlt { get; set; }
 
-
+        private static string oldSlug;
         #endregion
 
         public void OnGet(int id)
@@ -53,6 +56,7 @@ namespace BlogWeb.Areas.Admin.Pages.Post
             Description = post.Description;
             Slug = post.Slug;
             ImageAlt = post.ImageAlt;
+            oldSlug = post.Slug;
         }
 
         public IActionResult OnPost(int id)
@@ -76,6 +80,22 @@ namespace BlogWeb.Areas.Admin.Pages.Post
                 ModelState.AddModelError(nameof(Slug), result.Message);
                 return Page();
             }
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/PostPdf");
+            string writer = User.GetUserFullName();
+
+            _reportService.DeletePdf($"{oldSlug}.pdf", path);
+            _reportService.GeneratePdfReport(new PDFObject
+            {
+                CreationDate = DateTime.Now,
+                Description = Description,
+                Slug = Slug,
+                ImageAlt = ImageAlt,
+                Title = Title,
+                Writer = writer
+            });
+
+
+           
 
             return RedirectToPage("Index");
         }

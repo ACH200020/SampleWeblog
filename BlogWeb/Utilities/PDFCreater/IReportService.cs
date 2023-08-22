@@ -15,24 +15,31 @@ namespace BlogWeb.Utilities.PDFCreater
     {
         public OperationResult GeneratePdfReport(PDFObject pdf);
 
-
+        OperationResult DeletePdf(string fileName, string path);
     }
 
     public class ReportService : IReportService
     {
         private readonly IConverter _converter;
-
-        public ReportService(IConverter converter)
+        private readonly IFileManager _fileManager;
+        public ReportService(IConverter converter, IFileManager fileManager)
         {
             _converter = converter;
-
+            _fileManager = fileManager;
         }
+
+        public OperationResult DeletePdf(string fileName, string path)
+        {
+            _fileManager.DeleteFile(fileName, path);
+            return OperationResult.Success();
+        }
+
         public OperationResult GeneratePdfReport(PDFObject pdf)
         {
             var html = $@"<!DOCTYPE html>
    <html lang=""en""  dir=""rtl"">
    <head>
-       {pdf.Title}
+       نویسنده : {pdf.Writer}
    </head>
   <body>
 <h1>{pdf.Title}</h1>
@@ -45,8 +52,11 @@ namespace BlogWeb.Utilities.PDFCreater
             globalSettings.Orientation = Orientation.Portrait;
             globalSettings.PaperSize = PaperKind.A4;
             globalSettings.Margins = new MarginSettings { Top = 25, Bottom = 25 };
-            globalSettings.Out = $@"C:\Users\Amir\source\repos\SampleWeblog\BlogWeb\wwwroot\PostPdf\{pdf.Slug}.pdf";
-            globalSettings.DocumentTitle = pdf.Title;
+            //globalSettings.Out = $@"C:\Users\Amir\source\repos\SampleWeblog\BlogWeb\wwwroot\PostPdf\{pdf.Slug}.pdf";
+            //globalSettings.Out = $@"C:\C#\test\test\SampleWeblog\BlogWeb\wwwroot\PostPdf\{pdf.Slug}.pdf";
+            globalSettings.Out = Path.Combine(Directory.GetCurrentDirectory(),$@"wwwroot\PostPdf\{pdf.Slug}.pdf");
+
+            globalSettings.DocumentTitle = pdf.Writer;
             ObjectSettings objectSettings = new ObjectSettings();
             objectSettings.PagesCount = true;
             objectSettings.HtmlContent = html;
@@ -83,6 +93,6 @@ namespace BlogWeb.Utilities.PDFCreater
         public string? Slug { get; set; }
         public DateTime? CreationDate { get; set; }
         public string? ImageAlt { get; set; }
-
+        public string Writer { get; set; }
     }
 }
