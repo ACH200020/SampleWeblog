@@ -3,6 +3,7 @@ using CoreLayer.Utilities;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace BlogWeb.Utilities.PDFCreater
 {
     public interface IReportService
     {
-        public OperationResult GeneratePdfReport(PDFObject pdf);
+        public OperationResult GeneratePdfReport(PDFObject pdf, string fullPathImage);
 
         OperationResult DeletePdf(string fileName, string path);
     }
@@ -34,8 +35,9 @@ namespace BlogWeb.Utilities.PDFCreater
             return OperationResult.Success();
         }
 
-        public OperationResult GeneratePdfReport(PDFObject pdf)
+        public OperationResult GeneratePdfReport(PDFObject pdf, string fullPathImage)
         {
+             
             var html = $@"<!DOCTYPE html>
    <html lang=""en""  dir=""rtl"">
    <head>
@@ -43,6 +45,8 @@ namespace BlogWeb.Utilities.PDFCreater
    </head>
   <body>
 <h1>{pdf.Title}</h1>
+<img src ='{fullPathImage}'/>
+
 {pdf.Description}
  </body>
   </html>";
@@ -92,7 +96,7 @@ namespace BlogWeb.Utilities.PDFCreater
         public string? Title { get; set; }
         public string? Slug { get; set; }
         public DateTime? CreationDate { get; set; }
-        public string? ImageAlt { get; set; }
         public string Writer { get; set; }
+        public string ImageName { get; set; }
     }
 }

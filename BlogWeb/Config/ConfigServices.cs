@@ -1,4 +1,5 @@
-﻿using DinkToPdf.Contracts;
+﻿using BlogWeb.Utilities.GoogleRecapcha;
+using DinkToPdf.Contracts;
 using DinkToPdf;
 using CoreLayer.Services.FileManagment;
 using CoreLayer.Services.Post;
@@ -18,7 +19,8 @@ namespace BlogWeb.Config
             services.AddTransient<IFileManager, FileManager>();
             services.AddTransient<IUserRoleService, UserRoleService>();
             services.AddTransient<IUserTokenService, UserTokenService>();
-
+            services.AddTransient<IGoogleService, GoogleService>();
+            services.AddHttpContextAccessor();
             services.AddSingleton<IReportService,ReportService>();
             services.AddSingleton(typeof(IConverter),
             new SynchronizedConverter(new PdfTools()));

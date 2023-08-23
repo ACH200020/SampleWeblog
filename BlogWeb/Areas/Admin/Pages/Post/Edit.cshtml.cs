@@ -3,6 +3,7 @@ using BlogWeb.Utilities.PDFCreater;
 using CoreLayer.DTOs.Post;
 using CoreLayer.Services.Post;
 using CoreLayer.Utilities;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -81,7 +82,13 @@ namespace BlogWeb.Areas.Admin.Pages.Post
                 return Page();
             }
             string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/PostPdf");
+
             string writer = User.GetUserFullName();
+
+            var post = _postService.GetPostById(id);
+
+            var fullPath = HttpContext.Request.Scheme+"://"+HttpContext.Request.Host.ToString()+
+                 Directories.GetPostImage(post.ImagePost);
 
             _reportService.DeletePdf($"{oldSlug}.pdf", path);
             _reportService.GeneratePdfReport(new PDFObject
@@ -89,10 +96,10 @@ namespace BlogWeb.Areas.Admin.Pages.Post
                 CreationDate = DateTime.Now,
                 Description = Description,
                 Slug = Slug,
-                ImageAlt = ImageAlt,
+                ImageName = Directories.GetPostImage(post.ImagePost),
                 Title = Title,
                 Writer = writer
-            });
+            },fullPath);
 
 
            

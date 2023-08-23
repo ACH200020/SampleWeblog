@@ -32,6 +32,7 @@ namespace CoreLayer.Services.UserToken
 
         public OperationResult CheckExpireTokenAndReCreate(string token,string refreshToken, CreateUserTokenDto command)
         {
+
             var userToken = _context.UserTokens.FirstOrDefault(x => x.UserId == command.UserId);
             if(userToken == null)
                 return OperationResult.NotFound();

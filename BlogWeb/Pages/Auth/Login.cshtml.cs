@@ -14,6 +14,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BlogWeb.Utilities.GoogleRecapcha;
 
 namespace BlogWeb.Pages.Auth
 {
@@ -26,12 +27,14 @@ namespace BlogWeb.Pages.Auth
         private readonly IUserRoleService _userRoleService;
         private readonly IUserTokenService _userToken;
         private readonly IConfiguration _configuration;
-        public LoginModel(IUserService userService, IUserRoleService userRoleService, IConfiguration configuration, IUserTokenService userToken)
+        private readonly IGoogleService _googleService;
+        public LoginModel(IUserService userService, IUserRoleService userRoleService, IConfiguration configuration, IUserTokenService userToken, IGoogleService googleService)
         {
             _userService = userService;
             _userRoleService = userRoleService;
             _configuration = configuration;
             _userToken = userToken;
+            _googleService = googleService;
         }
         #endregion
 
@@ -52,8 +55,16 @@ namespace BlogWeb.Pages.Auth
         {
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPost()
         {
+
+
+            if (!await _googleService.IsSatisfyAsync())
+            {
+                ModelState.AddModelError(nameof(PhoneNumber), "اعتبار سنجی recaptcha انجام نشد");
+                return Page();
+            }
+
             var user = _userService.Login(new LoginDto()
             {
                 Password = Password,

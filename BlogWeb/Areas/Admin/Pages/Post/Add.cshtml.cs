@@ -3,6 +3,7 @@ using BlogWeb.Utilities.PDFCreater;
 using CoreLayer.DTOs.Post;
 using CoreLayer.Services.Post;
 using CoreLayer.Utilities;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
@@ -74,17 +75,20 @@ namespace BlogWeb.Areas.Admin.Pages.Post
                 ImageAlt = ImageAlt
 
             });
+            var post = _postService.GetPostBySlug(Slug);
+
+            string fullPath = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host.ToString() +
+                Directories.GetPostImage(post.ImagePost);
 
             result = _report.GeneratePdfReport(new PDFObject()
             {
                 CreationDate = DateTime.Now,
                 Description = Description,
-                ImageAlt = ImageAlt,
+                ImageName = Directories.GetPostImage(post.ImagePost),
                 Slug = Slug,
                 Title = Title,
                 Writer = writer
-            });
-
+            }, fullPath);
             if (result.Status != OperationResultStatus.Success)
             {
                 ModelState.AddModelError(nameof(Slug), result.Message);

@@ -9,6 +9,7 @@ using CoreLayer.Utilities;
 using CoreLayer.Utilities.SecurityUtil;
 using DataLayer.Entities.Users;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Data;
@@ -35,10 +36,12 @@ namespace BlogWeb.Pages
         public List<PostDto> Posts{ get; set; }
         public IActionResult OnGet()
         {
+
+
             var token = Request.Cookies["token"];
             var refreshToken = Request.Cookies["refreshToken"];
-            
-            if (token != null&& refreshToken != null)
+
+            if (token != null && refreshToken != null)
             {
                 var role = User.GetRole();
                 var user = _userService.GetUserById(User.GetUserId());
@@ -57,7 +60,7 @@ namespace BlogWeb.Pages
                     HashRefreshToken = Sha256Hasher.Hash(refreshJwtToken)
                 });
 
-                if(result.Status == OperationResultStatus.Success )
+                if (result.Status == OperationResultStatus.Success)
                 {
                     HttpContext.Response.Cookies.Delete("token");
                     HttpContext.Response.Cookies.Delete("refreshToken");
