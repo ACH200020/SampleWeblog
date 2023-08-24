@@ -43,6 +43,18 @@ namespace CoreLayer.Services.UserToken
                 return OperationResult.NotFound();
             }
 
+            if (Sha256Hasher.Hash(token) != userToken.HashJwtToken)
+            {
+                DeleteToken(userId);
+                return OperationResult.NotFound();
+            }
+
+            if (Sha256Hasher.Hash(refreshToken) != userToken.HashRefreshToken)
+            {
+                DeleteToken(userId);
+                return OperationResult.NotFound();
+            }
+
             if (userToken.User.IsActive == false)
             {
                 DeleteToken(userId);
@@ -52,17 +64,7 @@ namespace CoreLayer.Services.UserToken
             if (userToken.TokenExpireDate > DateTime.Now)
                 return OperationResult.Error("token is valid");
 
-            if (Sha256Hasher.Hash(token) != userToken.HashJwtToken)
-            {
-                DeleteToken(userId);
-                return OperationResult.NotFound();
-            }
-
-            if(Sha256Hasher.Hash(refreshToken) != userToken.HashRefreshToken)
-            {
-                DeleteToken(userId);
-                return OperationResult.NotFound();
-            }
+            
 
             if (userToken.TokenExpireDate < DateTime.Now)
                 if (userToken.RefreshTokenExpireDate > DateTime.Now)
