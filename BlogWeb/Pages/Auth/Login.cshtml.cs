@@ -130,7 +130,7 @@ namespace BlogWeb.Pages.Auth
             if(result.Status != OperationResultStatus.Success)
             {
                 ModelState.AddModelError(nameof(PhoneNumber), result.Message);
-                return Redirect("../Index");
+                return Page();
 
             }
 

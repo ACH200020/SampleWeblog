@@ -9,13 +9,14 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreLayer.Services.UserToken
 {
     public interface IUserTokenService
     {
         OperationResult CreateToken(CreateUserTokenDto command);
-        OperationResult CheckExpireTokenAndReCreate(string token, string refreshToken, CreateUserTokenDto command);
+        OperationResult CheckExpireToken(string token, string refreshToken, int userId);
 
         UesrTokenDto GetTokenByUserId(int id);
         OperationResult DeleteToken(int id);
@@ -30,60 +31,58 @@ namespace CoreLayer.Services.UserToken
             _context = context;
         }
 
-        public OperationResult CheckExpireTokenAndReCreate(string token,string refreshToken, CreateUserTokenDto command)
+        public OperationResult CheckExpireToken(string token,string refreshToken, int userId)
         {
 
-            var userToken = _context.UserTokens.FirstOrDefault(x => x.UserId == command.UserId);
-            if(userToken == null)
-                return OperationResult.NotFound();
+            var userToken = _context.UserTokens
+                .Include(u=>u.User)
+                .FirstOrDefault(x => x.UserId == userId);
 
-            if(userToken.TokenExpireDate> userToken.RefreshTokenExpireDate)
-                return OperationResult.Error();
-
-            if (Sha256Hasher.Hash(token) != userToken.HashJwtToken)
-                return OperationResult.Error();
-
-            if(Sha256Hasher.Hash(refreshToken) != userToken.HashRefreshToken)
-                return OperationResult.Error();
-
-            if(userToken.TokenExpireDate < userToken.RefreshTokenExpireDate)
-                if (userToken.RefreshTokenExpireDate > DateTime.Now)
-                    return OperationResult.Error();
-                else
-                {
-                    DeleteToken(command.UserId);
-                    CreateToken(new CreateUserTokenDto()
-                    {
-                        HashJwtToken = Sha256Hasher.Hash(command.HashJwtToken),
-                        RefreshTokenExpireDate = command.RefreshTokenExpireDate,
-                        CreationDate = command.CreationDate,
-                        Device = command.Device,
-                        HashRefreshToken = Sha256Hasher.Hash(command.HashRefreshToken),
-                        TokenExpireDate = command.TokenExpireDate,
-                        UserId = command.UserId
-                    });
-                    return OperationResult.Success();
-                }
-            else
+            if (userToken == null)
             {
-                return OperationResult.Success();
+                return OperationResult.NotFound();
             }
 
+            if (userToken.User.IsActive == false)
+            {
+                DeleteToken(userId);
+                return OperationResult.NotFound();
+            }
 
+            if (userToken.TokenExpireDate > DateTime.Now)
+                return OperationResult.Error("token is valid");
 
+            if (Sha256Hasher.Hash(token) != userToken.HashJwtToken)
+            {
+                DeleteToken(userId);
+                return OperationResult.NotFound();
+            }
+
+            if(Sha256Hasher.Hash(refreshToken) != userToken.HashRefreshToken)
+            {
+                DeleteToken(userId);
+                return OperationResult.NotFound();
+            }
+
+            if (userToken.TokenExpireDate < DateTime.Now)
+                if (userToken.RefreshTokenExpireDate > DateTime.Now)
+                    return OperationResult.Success();
+
+            return OperationResult.Error();
         }
 
         public OperationResult CreateToken(CreateUserTokenDto command)
         {
             var oldToken = _context.UserTokens.FirstOrDefault(f => f.UserId == command.UserId);
 
-            if (oldToken != null)
+            if (oldToken != null && command.Device != oldToken.Device)
             {
-                DeleteToken(oldToken.UserId);
+                /*DeleteToken(oldToken.UserId);
                 var newTokenn = UserTokenMapper.CreateUserTokenMapper(command);
                 _context.UserTokens.Add(newTokenn);
-                _context.SaveChanges();
-                return OperationResult.Error("فقط یک دستگاه به طور همزمان قابل استفاده است به همین دلیل از دستگاه قبلی خارج شدید");
+                _context.SaveChanges();*/
+                
+                return OperationResult.Error("فقط یک دستگاه به طور همزمان قابل استفاده است");
             }
 
             var newToken = UserTokenMapper.CreateUserTokenMapper(command);

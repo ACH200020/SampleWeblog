@@ -43,27 +43,36 @@ namespace BlogWeb.Pages
 
             if (token != null && refreshToken != null)
             {
-                var role = User.GetRole();
                 var user = _userService.GetUserById(User.GetUserId());
-                string jwtToken = BuildJwtToken.BuildToken(User.GetRole(), user, _configuration, null);
-                var guid = Guid.NewGuid().ToString();
-                string refreshJwtToken = BuildJwtToken.BuildToken(User.GetRole(), user, _configuration, guid);
+                var result = _userToken.CheckExpireToken(token, refreshToken, user.Id);
 
-                var result = _userToken.CheckExpireTokenAndReCreate(token, refreshToken, new CreateUserTokenDto()
-                {
-                    CreationDate = DateTime.Now,
-                    Device = DeviceInfornation.Info(HttpContext.Request.Headers["user-agent"]),
-                    RefreshTokenExpireDate = DateTime.Now.AddDays(10),
-                    TokenExpireDate = DateTime.Now.AddDays(7),
-                    UserId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value),
-                    HashJwtToken = Sha256Hasher.Hash(jwtToken),
-                    HashRefreshToken = Sha256Hasher.Hash(refreshJwtToken)
-                });
-
-                if (result.Status == OperationResultStatus.Success)
+                if (result.Status == OperationResultStatus.NotFound)
                 {
                     HttpContext.Response.Cookies.Delete("token");
                     HttpContext.Response.Cookies.Delete("refreshToken");
+                }
+
+                else if (result.Status == OperationResultStatus.Success)
+                {
+                    HttpContext.Response.Cookies.Delete("token");
+                    HttpContext.Response.Cookies.Delete("refreshToken");
+
+                    string jwtToken = BuildJwtToken.BuildToken(User.GetRole(), user, _configuration, null);
+
+                    var guid = Guid.NewGuid().ToString();
+
+                    string refreshJwtToken = BuildJwtToken.BuildToken(User.GetRole(), user, _configuration, guid);
+
+                    _userToken.CreateToken(new CreateUserTokenDto()
+                    {
+                        CreationDate = DateTime.Now,
+                        Device = DeviceInfornation.Info(HttpContext.Request.Headers["user-agent"]),
+                        HashJwtToken = Sha256Hasher.Hash(jwtToken),
+                        HashRefreshToken = Sha256Hasher.Hash(refreshJwtToken),
+                        RefreshTokenExpireDate = DateTime.Now.AddDays(10),
+                        TokenExpireDate = DateTime.Now.AddDays(7),
+                        UserId = user.Id
+                    });
 
                     HttpContext.Response.Cookies.Append("token", jwtToken, new CookieOptions()
                     {
