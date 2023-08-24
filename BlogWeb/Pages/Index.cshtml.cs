@@ -52,7 +52,7 @@ namespace BlogWeb.Pages
                 var result = _userToken.CheckExpireTokenAndReCreate(token, refreshToken, new CreateUserTokenDto()
                 {
                     CreationDate = DateTime.Now,
-                    Device = DeviceInfornation.Info(),
+                    Device = DeviceInfornation.Info(HttpContext.Request.Headers["user-agent"]),
                     RefreshTokenExpireDate = DateTime.Now.AddDays(10),
                     TokenExpireDate = DateTime.Now.AddDays(7),
                     UserId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value),

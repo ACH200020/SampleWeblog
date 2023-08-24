@@ -36,7 +36,7 @@ namespace BlogWeb.Pages.Auth
         [Required(ErrorMessage = "وارد کردن {0} اجباری است")]
         public string Family { get; set; }
         
-        [Display(Name = " نام")]
+        [Display(Name = "کدملی")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری است")]
         [MaxLength(10)]
         [MinLength(10)]
@@ -50,6 +50,7 @@ namespace BlogWeb.Pages.Auth
 
         [Display(Name = " رمز عبور")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری است")]
+        [MinLength(6,ErrorMessage = "حداقل تعداد حروف بایستی 6 حرف باشد")]
         public string Password { get; set; }
         #endregion
 

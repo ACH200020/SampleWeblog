@@ -42,10 +42,13 @@ namespace BlogWeb.Pages.Auth
 
         [Display(Name = " شماره تماس")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری است")]
+        [MaxLength(11)]
+        [MinLength(11)]
         public string PhoneNumber { get; set; }
 
         [Display(Name = " رمز عبور")]
         [Required(ErrorMessage = "وارد کردن {0} اجباری است")]
+        [MinLength(6, ErrorMessage = "حداقل تعداد حروف بایستی 6 حرف باشد")]
         public string Password { get; set; }
 
         #endregion
@@ -121,7 +124,7 @@ namespace BlogWeb.Pages.Auth
                 HashJwtToken = Sha256Hasher.Hash(jwtToken),
                 HashRefreshToken = Sha256Hasher.Hash(refreshJwtToken),
                 UserId = user.Id,
-                Device = DeviceInfornation.Info()
+                Device = DeviceInfornation.Info(HttpContext.Request.Headers["user-agent"])
             });
             //will add sweet Alert info
             if(result.Status != OperationResultStatus.Success)
